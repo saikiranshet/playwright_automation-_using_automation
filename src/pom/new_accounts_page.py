@@ -6,26 +6,21 @@ class NewAccountPage:
         self.page = page
 
     def create_savings_account(self):
-        print("Check")
         self.page.locator('//*[@id="leftPanel"]/ul/li[1]/a').click()
         self.page.get_by_role("combobox").first.select_option("1")
         self.page.locator('//*[@id="openAccountForm"]/form/div/input').click()
 
-        # Wait for accounts overview page to load before checking links
         self.page.wait_for_selector('//*[@id="leftPanel"]/ul/li[2]/a', timeout=5000)
         self.page.locator('//*[@id="leftPanel"]/ul/li[2]/a').click()
 
-        # Wait for any account activity links to appear
         self.page.wait_for_selector("a[href^='activity.htm']", timeout=5000)
 
         links = self.page.locator("a").all()
         activity_links = [
             link.get_attribute("href") for link in links if link.get_attribute("href") and link.get_attribute("href").startswith("activity.htm")
         ]
-
         if not activity_links:
             raise ValueError("No account activity links found! Account might not have been created.")
-
         last_link = activity_links[-1]
         last_id = last_link.split("id=")[-1]
         print("Here is the account ID:", last_id)
@@ -34,19 +29,15 @@ class NewAccountPage:
 
     def calculations(self):
         self.page.wait_for_selector('//*[@id="accountTable"]/tbody/tr', timeout=5000)
-
         rows = self.page.locator('//*[@id="accountTable"]/tbody/tr')
         all_td_values = []
-
         for row in rows.all():
             td_values = row.locator("td").all()
             td_texts = [td.inner_text() for td in td_values]
             all_td_values.append(td_texts)
-
         if not all_td_values:
             print("No account data found!")
             return []
-
         account_ids = [item[0] for item in all_td_values if item and item[0].isdigit()]
         middle_values = [item[1] for item in all_td_values if len(item) > 1 and item[1] not in ['Total', '\xa0']]
         numeric_values = [float(value.replace('$', '').replace(',', '')) for value in middle_values[:-1]] if len(middle_values) > 1 else []
@@ -64,8 +55,9 @@ class NewAccountPage:
 
     def transfer_funds(self):
         account_ids = self.calculations()
-        if len(account_ids) < 2:
-            print("Transfer not possible. Less than two accounts available.")
+        if len(account_ids) < 1:
+            print("Transfer not possible. 1 account available.Creating another account")
+            self.create_savings_account()
             return
         from_account = account_ids[0]
         to_account = account_ids[1]   
