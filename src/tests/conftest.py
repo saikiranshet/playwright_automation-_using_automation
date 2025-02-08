@@ -5,7 +5,6 @@ from pom.registration_page import RegistrationPage
 from pom.new_accounts_page import NewAccountPage
 
 
-@pytest.fixture(scope="session")
 def pytest_addoption(parser):
     """Add a command-line option for running tests in headless mode."""
     parser.addoption("--headless", action="store_true", default=False, help="Run browser in headless mode")
