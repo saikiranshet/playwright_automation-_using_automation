@@ -44,3 +44,8 @@ _ReSharper*/
 
 # Microsoft Office temporary files
 ~$*
+
+*.o
+.*.swp
+
+*.class
