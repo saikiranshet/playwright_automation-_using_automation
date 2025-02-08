@@ -6,12 +6,17 @@ from pom.new_accounts_page import NewAccountPage
 
 
 
+def pytest_addoption(parser):
+    """Add a command-line option for running tests in headless mode."""
+    parser.addoption("--headless", action="store_true", default=False, help="Run browser in headless mode")
+
+
 @pytest.fixture(scope="session")
 def setup():
     """Set up the browser and page for all tests in the session."""
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
-        browser = p.chromium.launch(args=['--start-maximized'], headless=False)
+        browser = p.chromium.launch(args=['--start-maximized'])
         page = browser.new_page(no_viewport=True)
         yield page
         browser.close()
