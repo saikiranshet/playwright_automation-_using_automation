@@ -11,7 +11,7 @@ def setup():
     """Set up the browser and page for all tests in the session."""
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
+        browser = p.chromium.launch(args=['--start-maximized'], headless=False)
+        page = browser.new_page(no_viewport=True)
         yield page
         browser.close()
