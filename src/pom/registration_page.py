@@ -23,7 +23,7 @@ class RegistrationPage:
         self.error_message_locator = page.locator(".error")  
 
     def generate_random_username(self):
-        words = ["alpha", "beta", "gamma", "delta", "omega", "zeta"]
+        words = ["alphaa", "betaa", "gammaa", "deltaa", "omegaa", "zetaa"]
         numbers = str(random.randint(1000, 9999))
         return f"{random.choice(words)}{numbers}@gmail.com"
 

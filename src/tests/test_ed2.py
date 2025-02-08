@@ -23,10 +23,10 @@ def test_global_menu(setup):
     homepg_naa.verify_customer_screen()
     homepg_naa.verify_homescreen_menu()
 
-def test_opening_account(setup):
+def test_All_tests(setup):
     page = setup
     account_page = NewAccountPage(page)
     account_id = account_page.create_savings_account() 
     account_page.calculations()
-    account_page.transfer_funds()
+    account_page.transfer_funds([account_id])
     account_page.pay_bill([account_id]) 

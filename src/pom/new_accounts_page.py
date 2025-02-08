@@ -7,14 +7,12 @@ class NewAccountPage:
 
     def create_savings_account(self):
         self.page.locator('//*[@id="leftPanel"]/ul/li[1]/a').click()
+        time.sleep(3)
         self.page.get_by_role("combobox").first.select_option("1")
         self.page.locator('//*[@id="openAccountForm"]/form/div/input').click()
-
         self.page.wait_for_selector('//*[@id="leftPanel"]/ul/li[2]/a', timeout=5000)
         self.page.locator('//*[@id="leftPanel"]/ul/li[2]/a').click()
-
         self.page.wait_for_selector("a[href^='activity.htm']", timeout=5000)
-
         links = self.page.locator("a").all()
         activity_links = [
             link.get_attribute("href") for link in links if link.get_attribute("href") and link.get_attribute("href").startswith("activity.htm")
@@ -48,27 +46,33 @@ class NewAccountPage:
         if len(all_td_values) > 1 and len(all_td_values[-1]) > 1:
             expected_total = float(all_td_values[-1][1].replace('$', '').replace(',', ''))
             calculated_total = sum(numeric_values)
-
             assert calculated_total == expected_total, "Balance mismatch!"
-
         return account_ids
 
-    def transfer_funds(self):
-        account_ids = self.calculations()
-        if len(account_ids) < 1:
-            print("Transfer not possible. 1 account available.Creating another account")
-            self.create_savings_account()
+    def transfer_funds(self, account_ids):
+        print(f"Checking available accounts: {len(account_ids)}")
+        if len(account_ids) < 1:  # Ensure at least 2 accounts exist
+            print("Not enough accounts for transfer. Creating another account...")
+            self.create_savings_account()  # Create a new account
+            time.sleep(5)  # Allow time for UI update
+            account_ids = self.calculations()  # Refresh account list
+            if len(account_ids) < 1:
+                print("Account creation failed or did not reflect in UI. Transfer aborted.")
+                return
+        if len(account_ids) < 2:
+            print("⚠️ Only one account available. Cannot perform transfer.")
             return
         from_account = account_ids[0]
-        to_account = account_ids[1]   
-        print(f"Transferring $1000 from {from_account} to {to_account}...")
+        to_account = account_ids[1]
+        print(f"✅ Transferring $1000 from {from_account} to {to_account}...")
         self.page.locator('//*[@id="leftPanel"]/ul/li[3]/a').click()
         self.page.locator('//*[@id="amount"]').fill("1000")
         self.page.locator('//*[@id="fromAccountId"]').select_option(from_account)
         self.page.locator('//*[@id="toAccountId"]').select_option(to_account)
         self.page.locator('//*[@id="transferForm"]/div[2]/input').click()
         time.sleep(5)
-        print("Transfer successful!")
+        print("✅ Transfer successful!")
+
 
     def pay_bill(self, account_ids):
         if not account_ids:

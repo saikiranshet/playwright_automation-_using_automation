@@ -10,6 +10,8 @@ class LoginPage():
     def login(self, username, password):
         self.page.locator(self.username_field).type(username)  
         self.page.locator(self.password_field).type(password) 
+        print("LOGIN USERNAME",username)
+        print("LOGIN PASSWORD",password)
         time.sleep(5)
         self.page.locator(self.login_button).click()
 
