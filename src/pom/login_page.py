@@ -8,8 +8,8 @@ class LoginPage():
         self.login_button = '//*[@id="loginPanel"]/form/div[3]/input'
 
     def login(self, username, password):
-        self.page.locator(self.username_field).type(username)  # Correct usage
-        self.page.locator(self.password_field).type(password)  # Correct usage
+        self.page.locator(self.username_field).type(username)  
+        self.page.locator(self.password_field).type(password) 
         time.sleep(5)
         self.page.locator(self.login_button).click()
 
