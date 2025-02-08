@@ -1,4 +1,3 @@
-import pytest
 from pom.registration_page import RegistrationPage
 from pom.login_page import LoginPage
 from pom.homescreen_navigation_page import HomePage

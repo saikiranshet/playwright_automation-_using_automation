@@ -6,6 +6,7 @@ class NewAccountPage:
         self.page = page
 
     def create_savings_account(self):
+        print("Check")
         self.page.locator('//*[@id="leftPanel"]/ul/li[1]/a').click()
         self.page.get_by_role("combobox").first.select_option("1")
         self.page.locator('//*[@id="openAccountForm"]/form/div/input').click()
@@ -117,4 +118,4 @@ class NewAccountPage:
         time.sleep(3)
         self.page.locator('//*[@id="billpayForm"]/form/table/tbody/tr[14]/td[2]/input').click()
         time.sleep(10)
-        print(self.page.title())
+        assert self.page.title()

@@ -48,7 +48,8 @@ class RegistrationPage:
         self.logout.click()
         self.page.goto('https://parabank.parasoft.com/')
         login_page = LoginPage(self.page)
-        login_page.login(username, 'Password123')
+        time.sleep(10)
+        login_page.login(username,'Password123')
         assert self.page.title(), "ParaBank | Accounts Overview"
 
         
