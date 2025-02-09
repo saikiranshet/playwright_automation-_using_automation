@@ -8,6 +8,5 @@ pytest -vs --html=src/reports/report.html --self-contained-html
 
 To Test the functionality
 Step1 - source test/Scripts/activate
-Step2 - pytest -vs
+Step2 - pytest -vs  --html=src/reports/report.html 
 
-pytest -vs  --html=src/reports/report.html 
