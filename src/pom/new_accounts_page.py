@@ -51,26 +51,27 @@ class NewAccountPage:
 
     def transfer_funds(self, account_ids):
         print(f"Checking available accounts: {len(account_ids)}")
-        if len(account_ids) < 1:  # Ensure at least 2 accounts exist
+        if len(account_ids) < 2: 
             print("Not enough accounts for transfer. Creating another account...")
-            self.create_savings_account()  # Create a new account
-            time.sleep(5)  # Allow time for UI update
-            account_ids = self.calculations()  # Refresh account list
-            if len(account_ids) < 1:
+            self.create_savings_account()  
+            time.sleep(5)  
+            account_ids = self.calculations()
+            if len(account_ids) < 2:
                 print("Account creation failed or did not reflect in UI. Transfer aborted.")
                 return
         if len(account_ids) < 2:
             print("⚠️ Only one account available. Cannot perform transfer.")
             return
         from_account = account_ids[0]
+        print("From Account:"account_ids[0])
         to_account = account_ids[1]
+        print("Destination Account",account_ids[1])
         print(f"✅ Transferring $1000 from {from_account} to {to_account}...")
         self.page.locator('//*[@id="leftPanel"]/ul/li[3]/a').click()
         self.page.locator('//*[@id="amount"]').fill("1000")
         self.page.locator('//*[@id="fromAccountId"]').select_option(from_account)
         self.page.locator('//*[@id="toAccountId"]').select_option(to_account)
         self.page.locator('//*[@id="transferForm"]/div[2]/input').click()
-        time.sleep(5)
         print("✅ Transfer successful!")
 
 
@@ -79,12 +80,9 @@ class NewAccountPage:
             print("No accounts available for bill payment.")
             return
 
-        from_account = account_ids[0]  # Use the first account for payment
-        print(from_account)
-
+        from_account = account_ids[0]  
         self.page.locator('//*[@id="leftPanel"]/ul/li[4]/a').click()
         print(f"Paying $500 from Account {from_account} to Electricity Company...")
-
         self.page.locator('//*[@id="billpayForm"]/form/table/tbody/tr[1]/td[2]/input').fill("Electricity Company")
         self.page.locator('//*[@id="billpayForm"]/form/table/tbody/tr[2]/td[2]/input').fill("123 Main St")
         self.page.locator('//*[@id="billpayForm"]/form/table/tbody/tr[3]/td[2]/input').fill("New York")
