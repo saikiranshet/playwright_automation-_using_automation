@@ -40,5 +40,5 @@ def test_api():
         assert False
 
 @pytest.mark.order(-1)  # Runs this test last
-def test_api():
+def test_api_response():
     assert response.status_code == 200
