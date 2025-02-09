@@ -34,7 +34,7 @@ response = session.post(LOGIN_URL, data=payload)
 def test_api():
     if "JSESSIONID" in response.cookies:
         jsession_id = response.cookies["JSESSIONID"]
-        print(f"✅ Login successful! JSESSIONID: {jsession_id}")
+        # print(f"✅ Login successful! JSESSIONID: {jsession_id}")
         assert True
     else:
         assert False
