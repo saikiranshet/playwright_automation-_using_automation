@@ -23,15 +23,13 @@ print(username,password)
 
 # Define API endpoints
 BASE_URL = "https://parabank.parasoft.com/parabank"
-LOGIN_URL = f"{BASE_URL}/login.htm"
+LOGIN_URL = f"{BASE_URL}/index.htm"
 
 # Perform Login API Request
 session = requests.Session()
-payload = {"username": username, "password": password}
-
+payload = {"username": "omega2364@gmail.com", "password": "Password123"}
 
 response = session.post(LOGIN_URL, data=payload)
-
 @pytest.mark.order(-1)  # Runs this test last
 def test_api():
     if "JSESSIONID" in response.cookies:
@@ -40,3 +38,7 @@ def test_api():
         assert True
     else:
         assert False
+
+@pytest.mark.order(-1)  # Runs this test last
+def test_api():
+    assert response.status_code == 200
