@@ -1,8 +1,10 @@
+import json
 import random
-import string
+import time
 from playwright.sync_api import Page
 from pom.login_page import LoginPage
-import time
+from data import *
+import os
 
 class RegistrationPage:
     def __init__(self, page: Page):
@@ -23,13 +25,14 @@ class RegistrationPage:
         self.error_message_locator = page.locator(".error")  
 
     def generate_random_username(self):
-        words = ["alphaa", "betaa", "gammaa", "deltaa", "omegaa", "zetaa"]
+        words = ["alpha", "beta", "gamma", "delta", "omega", "zeta"]
         numbers = str(random.randint(1000, 9999))
         return f"{random.choice(words)}{numbers}@gmail.com"
 
     def register_user(self):
         username = self.generate_random_username()
-        # print(username)
+        password = "Password123"
+
         self.first_name_field.fill("John")
         self.last_name_field.fill("Doe")
         self.address_field.fill("123 Test St")
@@ -39,21 +42,29 @@ class RegistrationPage:
         self.phone_number_field.fill("1234567890")
         self.ssn_field.fill("123-45-6789")
         self.username_field.fill(username)
-        # self.username_field.fill("saikiranshet2")
-        self.password_field.fill("Password123")
-        self.confirm_password_field.fill("Password123")
+        self.password_field.fill(password)
+        self.confirm_password_field.fill(password)
         self.register_button.click()
-        time.sleep(10)
-        assert self.page.title(), "ParaBank | Customer Created"
+        time.sleep(5)  # Allow time for registration
+
+        file_path = os.path.join(os.getcwd(), "src/data/credentials.json")
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Error: {file_path} not found.")    
+      
+        credentials = {"username": username, "password": password}
+        with open("credentials.json", "w") as file:
+            print(json.dump(credentials, file))
+            
+
+        # Verify registration
+        assert self.page.title() == "ParaBank | Customer Created", "Registration failed!"
+
+        # Logout and Login to verify
         self.logout.click()
         self.page.goto('https://parabank.parasoft.com/')
         login_page = LoginPage(self.page)
-        time.sleep(10)
-        login_page.login(username,'Password123')
-        assert self.page.title(), "ParaBank | Accounts Overview"
+        time.sleep(5)
+        login_page.login(username, password)
+        assert self.page.title() == "ParaBank | Accounts Overview", "Login failed!"
 
-        
-
-
-    
-    
+        print(f"✅ Registration successful! Credentials saved in credentials.json")

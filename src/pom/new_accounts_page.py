@@ -63,7 +63,7 @@ class NewAccountPage:
             print("⚠️ Only one account available. Cannot perform transfer.")
             return
         from_account = account_ids[0]
-        print("From Account:"account_ids[0])
+        print("From Account:",account_ids[0])
         to_account = account_ids[1]
         print("Destination Account",account_ids[1])
         print(f"✅ Transferring $1000 from {from_account} to {to_account}...")
