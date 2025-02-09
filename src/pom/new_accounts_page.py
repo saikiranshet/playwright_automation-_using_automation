@@ -96,17 +96,17 @@ class NewAccountPage:
             self.page.keyboard.type("1234567890")
         except Exception as e:
             print(f"❌ Error: Unable to locate the Phone field - {e}")
-            self.page.screenshot(path="phone_field_error.png")  # Take a screenshot for debugging
+            self.page.screenshot(path="phone_field_error.png")  
             return
-        self.page.keyboard.press("Tab")  # Adjust as needed
+        self.page.keyboard.press("Tab")  
         time.sleep(3)
         self.page.keyboard.type(from_account)
         time.sleep(3)
-        self.page.keyboard.press("Tab")  # Adjust as needed
+        self.page.keyboard.press("Tab") 
         time.sleep(3)
         self.page.keyboard.type(from_account)
         time.sleep(3)
-        self.page.keyboard.press("Tab")  # Adjust as needed
+        self.page.keyboard.press("Tab")  
         time.sleep(3)
         self.page.keyboard.type("500")
         time.sleep(3)
