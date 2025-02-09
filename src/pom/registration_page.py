@@ -47,19 +47,24 @@ class RegistrationPage:
         self.register_button.click()
         time.sleep(5)  # Allow time for registration
 
-        file_path = os.path.join(os.getcwd(), "src/data/credentials.json")
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"Error: {file_path} not found.")    
+        
+        # file_path = os.path.join(os.getcwd(), "data/credentials.json")
+        # if not os.path.exists(file_path):
+        #     raise FileNotFoundError(f"Error: {file_path} not found.")    
       
-        credentials = {"username": username, "password": password}
-        with open("credentials.json", "w") as file:
-            print(json.dump(credentials, file))
-            
 
-        # Verify registration
+        base_dir = os.path.dirname(os.path.dirname(__file__)) 
+        data_dir = os.path.join(base_dir, "data")  
+        file_path = os.path.join(data_dir, "credentials.json") 
+
+        os.makedirs(data_dir, exist_ok=True)
+
+        credentials = {"username": username, "password": password}
+        with open(file_path, "w") as file:
+            json.dump(credentials, file)
+
         assert self.page.title() == "ParaBank | Customer Created", "Registration failed!"
 
-        # Logout and Login to verify
         self.logout.click()
         self.page.goto('https://parabank.parasoft.com/')
         login_page = LoginPage(self.page)

@@ -1,26 +1,42 @@
+import json
 import requests
+from data import *
+import pytest
 
-url = "https://parabank.parasoft.com/parabank/services_proxy/bank/accounts/21891/transactions/onDate/02-08-2025?timeout=30000"
-url2 = "https://parabank.parasoft.com/parabank/services_proxy/bank/accounts/21891/transactions/fromDate/02-08-2025/toDate/02-08-2025?timeout=30000"
-url3 = "https://parabank.parasoft.com/parabank/services_proxy/bank/accounts/21780/transactions/amount/1000?timeout=30000"
+import os
 
-headers = {
-  'Cookie': 'JSESSIONID=27E795F5922CD85D55DB5C5363665259',
-  'Referer': 'https://parabank.parasoft.com/parabank/findtrans.htm'
-}
+base_dir = os.path.dirname(os.path.dirname(__file__))  # Go up one level
+file_path = os.path.join(base_dir, "data", "credentials.json")
 
-def test_status_code_ondate():
-    response = requests.request("GET", url, headers=headers)
-    assert response.status_code==200
-    
-def test_status_code_fromto():
-    response = requests.request("GET", url2, headers=headers)
-    assert response.status_code==200
+if not os.path.exists(file_path):
+    raise FileNotFoundError(f"Error: {file_path} not found.")
 
-def test_status_code_Amount():
-    response = requests.request("GET", url3, headers=headers)
-    assert response.status_code==200
+print("File found at:", file_path)
+
+with open(file_path, "r") as file:
+    credentials = json.load(file)
+
+username = credentials["username"]
+password = credentials["password"]
+
+print(username,password)
+
+# Define API endpoints
+BASE_URL = "https://parabank.parasoft.com/parabank"
+LOGIN_URL = f"{BASE_URL}/login.htm"
+
+# Perform Login API Request
+session = requests.Session()
+payload = {"username": username, "password": password}
 
 
+response = session.post(LOGIN_URL, data=payload)
 
-
+@pytest.mark.run(order=-1)
+def test_api():
+    if "JSESSIONID" in response.cookies:
+        jsession_id = response.cookies["JSESSIONID"]
+        print(f"✅ Login successful! JSESSIONID: {jsession_id}")
+        assert True
+    else:
+        assert False
