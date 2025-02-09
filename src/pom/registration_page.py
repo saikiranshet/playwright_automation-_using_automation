@@ -3,7 +3,7 @@ import random
 import time
 from playwright.sync_api import Page
 from pom.login_page import LoginPage
-from data import *
+# from data import *
 import os
 
 class RegistrationPage:

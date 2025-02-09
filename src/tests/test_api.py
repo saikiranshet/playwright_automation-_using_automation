@@ -32,7 +32,7 @@ payload = {"username": username, "password": password}
 
 response = session.post(LOGIN_URL, data=payload)
 
-@pytest.mark.run(order=-1)
+@pytest.mark.order(-1)  # Runs this test last
 def test_api():
     if "JSESSIONID" in response.cookies:
         jsession_id = response.cookies["JSESSIONID"]
